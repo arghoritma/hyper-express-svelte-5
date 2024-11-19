@@ -13,7 +13,7 @@
   let selectAll = false;
 
   $: if (selectAll) {
-    selectedUsers = new Set(users.map(user => user.id));
+    selectedUsers = new Set(users.map((user) => user.id));
   } else {
     selectedUsers = new Set();
   }
@@ -43,12 +43,12 @@
 
   async function deleteSelected() {
     if (confirm("Are you sure you want to delete the selected users?")) {
-      inertia.delete("/users", { 
+      inertia.delete("/users", {
         data: { ids: Array.from(selectedUsers) },
         onSuccess: () => {
           selectedUsers = new Set();
           selectAll = false;
-        }
+        },
       });
     }
   }
@@ -59,62 +59,55 @@
 </script>
 
 <Layout path="home">
-  <div class="container xl:max-w-7xl mx-auto p-4 lg:p-8">
+  <div class="container mx-auto p-4 lg:p-8">
     <!-- Header -->
-    <div class="sm:flex sm:items-center sm:justify-between mb-8">
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8"
+    >
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">User Management</h1>
-        <p class="mt-1 text-sm text-gray-500">
+        <h1 class="text-2xl font-bold">User Management</h1>
+        <p class="mt-1 text-sm opacity-70">
           Manage your system users and their access
         </p>
       </div>
       <div class="mt-4 sm:mt-0">
-        <a
-          href="/register"
-          use:inertia
-          class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Add User
-        </a>
+        <a href="/register" use:inertia class="btn btn-primary"> Add User </a>
       </div>
     </div>
 
     <!-- Filters -->
     <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <!-- Search -->
-      <div class="flex">
+      <div class="join">
         <input
           type="text"
           bind:value={search}
           placeholder="Search users..."
-          class="w-full rounded-l-lg border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+          class="input input-bordered join-item w-full"
           on:keyup={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          class="rounded-r-lg border border-l-0 border-indigo-600 bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-700"
-          on:click={handleSearch}
-        >
+        <button class="btn btn-primary join-item" on:click={handleSearch}>
           Search
         </button>
       </div>
 
       <!-- Filter Buttons -->
-      <div class="flex space-x-2">
+      <div class="join">
         <button
-          class="px-4 py-2 text-sm rounded-lg {filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
-          on:click={() => handleFilter('all')}
+          class="btn join-item {filter === 'all' ? 'btn-primary' : ''}"
+          on:click={() => handleFilter("all")}
         >
           All Users
         </button>
         <button
-          class="px-4 py-2 text-sm rounded-lg {filter === 'verified' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
-          on:click={() => handleFilter('verified')}
+          class="btn join-item {filter === 'verified' ? 'btn-primary' : ''}"
+          on:click={() => handleFilter("verified")}
         >
           Verified
         </button>
         <button
-          class="px-4 py-2 text-sm rounded-lg {filter === 'unverified' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
-          on:click={() => handleFilter('unverified')}
+          class="btn join-item {filter === 'unverified' ? 'btn-primary' : ''}"
+          on:click={() => handleFilter("unverified")}
         >
           Unverified
         </button>
@@ -122,73 +115,61 @@
     </div>
 
     <!-- Table -->
-    <div class="overflow-x-auto bg-white rounded-lg shadow">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
           <tr>
-            <th class="px-4 py-3">
-              <input
-                type="checkbox"
-                bind:checked={selectAll}
-                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-            </th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Name
-            </th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Email
-            </th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
-            </th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Joined
-            </th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          {#each users as user (user.id)}
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3">
+            <th>
+              <label>
                 <input
                   type="checkbox"
-                  checked={selectedUsers.has(user.id)}
-                  on:change={() => toggleUser(user.id)}
-                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  class="checkbox"
+                  bind:checked={selectAll}
                 />
+              </label>
+            </th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each users as user (user.id)}
+            <tr>
+              <td>
+                <label>
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    checked={selectedUsers.has(user.id)}
+                    on:change={() => toggleUser(user.id)}
+                  />
+                </label>
               </td>
-              <td class="px-4 py-3">
-                <div class="flex items-center">
+              <td>
+                <div class="flex items-center gap-3">
                   <div>
-                    <div class="font-medium text-gray-900">{user.name}</div>
+                    <div class="font-bold">{user.name}</div>
                     {#if user.phone}
-                      <div class="text-sm text-gray-500">{user.phone}</div>
+                      <div class="text-sm opacity-70">{user.phone}</div>
                     {/if}
                   </div>
                 </div>
               </td>
-              <td class="px-4 py-3 text-sm text-gray-900">{user.email}</td>
-              <td class="px-4 py-3">
+              <td>{user.email}</td>
+              <td>
                 {#if user.is_verified}
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Verified
-                  </span>
+                  <div class="badge badge-success">Verified</div>
                 {:else}
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    Unverified
-                  </span>
+                  <div class="badge badge-warning">Unverified</div>
                 {/if}
               </td>
-              <td class="px-4 py-3 text-sm text-gray-900">
-                {formatDate(user.created_at)}
-              </td>
-              <td class="px-4 py-3 text-sm text-gray-500">
+              <td>{formatDate(user.created_at)}</td>
+              <td>
                 <button
-                  class="text-indigo-600 hover:text-indigo-900"
+                  class="btn btn-ghost btn-xs"
                   on:click={() => inertia.visit(`/users/${user.id}/edit`)}
                 >
                   Edit
@@ -203,19 +184,20 @@
     <!-- Pagination -->
     {#if total > 0}
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-sm text-gray-700">
-          Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, total)} of {total} users
+        <div class="text-sm">
+          Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, total)} of {total}
+          users
         </div>
-        <div class="flex space-x-2">
+        <div class="join">
           <button
-            class="px-4 py-2 text-sm rounded-lg {page === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'}"
+            class="btn join-item {page === 1 ? 'btn-disabled' : ''}"
             disabled={page === 1}
             on:click={() => handlePage(page - 1)}
           >
             Previous
           </button>
           <button
-            class="px-4 py-2 text-sm rounded-lg {page * 10 >= total ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'}"
+            class="btn join-item {page * 10 >= total ? 'btn-disabled' : ''}"
             disabled={page * 10 >= total}
             on:click={() => handlePage(page + 1)}
           >
@@ -229,21 +211,14 @@
     {#if selectedUsers.size > 0}
       <div class="fixed bottom-0 inset-x-0 pb-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="bg-indigo-600 rounded-lg shadow-lg px-6 py-4">
-            <div class="flex items-center justify-between flex-wrap">
-              <div class="flex-1 flex items-center">
-                <span class="text-white">
-                  {selectedUsers.size} user{selectedUsers.size === 1 ? '' : 's'} selected
-                </span>
-              </div>
-              <div class="flex-shrink-0">
-                <button
-                  on:click={deleteSelected}
-                  class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white"
-                >
-                  Delete Selected
-                </button>
-              </div>
+          <div class="alert alert-info">
+            <div class="flex items-center justify-between w-full">
+              <span>
+                {selectedUsers.size} user{selectedUsers.size === 1 ? "" : "s"} selected
+              </span>
+              <button on:click={deleteSelected} class="btn btn-error btn-sm">
+                Delete Selected
+              </button>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: "better-sqlite3",
     connection: {
-      filename: "./db/dev.sqlite3"
+      filename: "./dev.sqlite3"
     },
     useNullAsDefault : true
   },
@@ -15,7 +15,7 @@ const config: { [key: string]: Knex.Config } = {
   production: {
     client: "better-sqlite3",
     connection: {
-      filename: "./db/production.sqlite3"
+      filename: "./production.sqlite3"
     },
     useNullAsDefault : true
   },
